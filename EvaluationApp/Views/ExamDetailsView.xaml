@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EvaluationApp.Views.ExamDetailsView"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:EvaluationApp.ViewModels"
+             x:DataType="vm:ExamDetailsViewModel"
+             xmlns:model="clr-namespace:EvaluationApp.Models"
+             Title="{Binding Title}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Create" 
+                     IsEnabled="{Binding IsNew}"
+                     IconImageSource="dotnet_bot.png" 
+                     Command="{Binding CreateExamCommand}"/>
+
+        <ToolbarItem Text="Add Question" 
+                     IsEnabled="{Binding IsNotNew}"
+                     IconImageSource="dotnet_bot.png" 
+                     Command="{Binding AddQuestionCommand}"/>
+
+        <ToolbarItem Text="Delete" 
+                     IsEnabled="{Binding IsNotNew}"
+                     IconImageSource="dotnet_bot.png" 
+                     Command="{Binding DeleteExamCommand}"/>
+
+    </ContentPage.ToolbarItems>
+
+    <Grid Margin="10"
+          ColumnSpacing="10"
+          RowSpacing="10"
+          RowDefinitions="Auto,Auto,Auto,Auto,*"
+          ColumnDefinitions="*,*">
+
+        <HorizontalStackLayout Grid.Row="0"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Spacing="10">
+
+            <Label VerticalOptions="Center"
+                   Text="What's the exam about?" 
+                   FontAttributes="Bold"/>
+
+            <Entry VerticalOptions="Center"
+                   FontAttributes="Bold"
+                   IsEnabled="{Binding IsNew}"
+                   WidthRequest="300"
+                   Text="{Binding Exam.Topic}"/>
+
+        </HorizontalStackLayout>
+
+        <ActivityIndicator Grid.Row="1"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           HorizontalOptions="Center"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="True"
+                           Color="Orange"/>
+
+        <toolkit:Expander Grid.Row="2" 
+                          WidthRequest="400"
+                          HorizontalOptions="Start">
+            <toolkit:Expander.Header>
+                <Label Text="New question" 
+                       FontAttributes="Bold"
+                       BackgroundColor="LightGray"/>
+            </toolkit:Expander.Header>
+
+            <Grid Margin="5" 
+                  RowSpacing="5" 
+                  ColumnSpacing="5"
+                  RowDefinitions="Auto,Auto,Auto,Auto"
+                  ColumnDefinitions="Auto,Auto">
+                <Label Grid.Row="0" Grid.Column="0" 
+                       VerticalOptions="Center"
+                       Text="Content" />
+                <Entry Grid.Row="0" Grid.Column="1"
+                       WidthRequest="300"
+                       Text="{Binding NewQuestion.Content}"/>
+
+                <Label Grid.Row="1" Grid.Column="0" 
+                       VerticalOptions="Center"
+                       Text="Option A" />
+                <Entry Grid.Row="1" Grid.Column="1" 
+                       Text="{Binding NewQuestion.OptionA}"/>
+
+                <Label Grid.Row="2" Grid.Column="0" 
+                       VerticalOptions="Center"
+                       Text="Option B" />
+                <Entry Grid.Row="2" Grid.Column="1" 
+                       WidthRequest="300"
+                       Text="{Binding NewQuestion.OptionB}"/>
+
+                <Label Grid.Row="3" Grid.Column="0" 
+                       VerticalOptions="Center"
+                       Text="Option C" />
+                <Entry Grid.Row="3" Grid.Column="1" 
+                       Text="{Binding NewQuestion.OptionC}"/>
+            </Grid>
+        </toolkit:Expander>
+
+        <Label Grid.Row="3" 
+               Text="Question List"
+               FontSize="Medium"
+               FontAttributes="Bold"/>
+
+        <CollectionView Grid.Row="4"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        WidthRequest="400"
+                        VerticalOptions="Start"
+                        HorizontalOptions="Start"
+                        EmptyView="No questions have been generated yet!"
+                        ItemsSource="{Binding Questions}"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Question">
+                    <VerticalStackLayout Spacing="5" 
+                                         Margin="10" 
+                                         Padding="5">
+                        <Label Text="{Binding Content}"
+                               FontAttributes="Bold"/>
+                        <RadioButton Content="{Binding OptionA}"/>
+                        <RadioButton Content="{Binding OptionB}"/>
+                        <RadioButton Content="{Binding OptionC}"/>
+
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="Green"
+                                 VerticalOptions="End"/>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+
+</ContentPage>
